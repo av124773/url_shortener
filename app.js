@@ -41,11 +41,20 @@ app.get('/', (req, res) => {
   res.render('index') 
 })
 
-app.get('/:id', (req, res) => {
+app.get('/shorten/:id', (req, res) => {
   const id = req.params.id
   return UrlShortener.findById(id)
     .lean()
     .then(urlShortener => res.render('show', { urlShortener }))
+    .catch(error => console.log(error))
+})
+
+app.get('/:shortUrl', (req, res) => {
+  const shortCode = req.params.shortUrl
+  const shortUrl = HOST + shortCode
+  return UrlShortener.find({ shortUrl: shortUrl })
+    .lean()
+    .then(shortUrl => res.redirect(`${shortUrl[0].url}`))
     .catch(error => console.log(error))
 })
 
@@ -57,11 +66,11 @@ app.post('/shorten', (req, res) => {
         console.log('no find')
         const shortUrl = HOST + urlRandomCodeCreate()
         return UrlShortener.create({ url: userUrl, shortUrl: shortUrl })
-          .then(urlShortener => res.redirect(`/${urlShortener._id}`))
+          .then(urlShortener => res.redirect(`/shorten/${urlShortener._id}`))
           .catch(error => console.log(error))
       } else {
         console.log('find url')
-        res.redirect(`/${findUrl[0]._id}`)
+        res.redirect(`/shorten/${findUrl[0]._id}`)
       }
     })
     .catch(error => console.log(error)) 
