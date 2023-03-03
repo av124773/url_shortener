@@ -1,6 +1,10 @@
 const express = require('express')
 const router = express.Router()
 
+const UrlShortener = require('../../models/url-shortener')
+
+const HOST = 'http://localhost:3001/'
+
 router.get('/', (req, res) => {
   res.render('index')
 })
