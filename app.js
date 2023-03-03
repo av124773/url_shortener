@@ -63,13 +63,11 @@ app.post('/shorten', (req, res) => {
   return UrlShortener.find({ url: userUrl })
     .then(findUrl => {
       if (findUrl.length === 0) {
-        console.log('no find')
         const shortUrl = HOST + urlRandomCodeCreate()
         return UrlShortener.create({ url: userUrl, shortUrl: shortUrl })
           .then(urlShortener => res.redirect(`/shorten/${urlShortener._id}`))
           .catch(error => console.log(error))
       } else {
-        console.log('find url')
         res.redirect(`/shorten/${findUrl[0]._id}`)
       }
     })

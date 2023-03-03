@@ -1,8 +1,15 @@
-<div class="container">
-  <form action="/shorten" method="post">
-    <p>
-      <input type="text" placeholder="請輸入網址" name="url" size="50" required>
-    </p>
-    <button type="submit">縮址</button>
-  </form>  
-</div>
+
+<form action="/shorten" method="post">
+  <div class="row">
+    <div class="col-auto mx-auto">
+      <p>
+        <input type="text" placeholder="請輸入網址" name="url" size="50" required>
+      </p>
+    </div>
+  </div>
+  <div class="row">
+    <div class="col-auto mx-auto">
+      <button class="btn btn-outline-primary" type="submit">縮址</button>
+    </div>
+  </div>
+</form>  
