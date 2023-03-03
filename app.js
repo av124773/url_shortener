@@ -5,9 +5,7 @@ const express = require('express')
 const mongoose = require('mongoose')
 const exphbs = require('express-handlebars')
 const bodyParser = require('body-parser')
-
-const UrlShortener = require('./models/url-shortener')
-const urlRandomCodeCreate = require('./models/url-random')
+const router = require('./routes')
 
 if (process.env.NODE_ENV = 'production') {
   require('dotenv').config()
@@ -33,46 +31,7 @@ app.engine('hbs', exphbs({ defaultLayout: 'main', extname: '.hbs' }))
 app.set('view engine', 'hbs')
 
 app.use(bodyParser.urlencoded({ extended: true }))
-
-/** 
- * Route setting
- */
-app.get('/', (req, res) => {
-  res.render('index') 
-})
-
-app.get('/shorten/:id', (req, res) => {
-  const id = req.params.id
-  return UrlShortener.findById(id)
-    .lean()
-    .then(urlShortener => res.render('show', { urlShortener }))
-    .catch(error => console.log(error))
-})
-
-app.get('/:shortUrl', (req, res) => {
-  const shortCode = req.params.shortUrl
-  const shortUrl = HOST + shortCode
-  return UrlShortener.find({ shortUrl: shortUrl })
-    .lean()
-    .then(shortUrl => res.redirect(`${shortUrl[0].url}`))
-    .catch(error => console.log(error))
-})
-
-app.post('/shorten', (req, res) => {
-  const userUrl = req.body.url
-  return UrlShortener.find({ url: userUrl })
-    .then(findUrl => {
-      if (findUrl.length === 0) {
-        const shortUrl = HOST + urlRandomCodeCreate()
-        return UrlShortener.create({ url: userUrl, shortUrl: shortUrl })
-          .then(urlShortener => res.redirect(`/shorten/${urlShortener._id}`))
-          .catch(error => console.log(error))
-      } else {
-        res.redirect(`/shorten/${findUrl[0]._id}`)
-      }
-    })
-    .catch(error => console.log(error)) 
-})
+app.use(router)
 
 /** 
  * Express server listening
