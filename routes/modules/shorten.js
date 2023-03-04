@@ -13,32 +13,26 @@ router.get('/:id', (req, res) => {
     .then(urlShortener => res.render('show', { urlShortener }))
     .catch(err => {
       console.log(err)
-      res.render(
-        'error',
-        { error: err.message }
-      )
+      res.render('error', { error: err.message })
     })
 })
 
 router.post('/', (req, res) => {
   const userUrl = req.body.url
-  return UrlShortener.find({ url: userUrl })
+  UrlShortener.findOne({ url: userUrl })
     .then(findUrl => {
-      if (findUrl.length === 0) {
+      if (!findUrl) {
         const shortUrl = HOST + urlRandomCodeCreate()
         return UrlShortener.create({ url: userUrl, shortUrl: shortUrl })
           .then(urlShortener => res.redirect(`/shorten/${urlShortener._id}`))
           .catch(error => console.log(error))
       } else {
-        res.redirect(`/shorten/${findUrl[0]._id}`)
+        res.redirect(`/shorten/${findUrl._id}`)
       }
     })
     .catch(err => {
       console.log(err)
-      res.render(
-        'error',
-        { error: err.message }
-      )
+      res.render('error', { error: err.message })
     })
 })
 
