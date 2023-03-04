@@ -12,9 +12,9 @@ router.get('/', (req, res) => {
 router.get('/:shortUrl', (req, res) => {
   const shortCode = req.params.shortUrl
   const shortUrl = HOST + shortCode
-  return UrlShortener.find({ shortUrl: shortUrl })
+  return UrlShortener.findOne({ shortUrl: shortUrl })
     .lean()
-    .then(shortUrl => res.redirect(`${shortUrl[0].url}`))
+    .then(shortUrl => res.redirect(`${shortUrl.url}`))
     .catch(err => {
       console.log(err)
       res.render(
