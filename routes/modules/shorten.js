@@ -11,7 +11,13 @@ router.get('/:id', (req, res) => {
   return UrlShortener.findById(id)
     .lean()
     .then(urlShortener => res.render('show', { urlShortener }))
-    .catch(error => console.log(error))
+    .catch(err => {
+      console.log(err)
+      res.render(
+        'error',
+        { error: err.message }
+      )
+    })
 })
 
 router.post('/', (req, res) => {
@@ -27,7 +33,13 @@ router.post('/', (req, res) => {
         res.redirect(`/shorten/${findUrl[0]._id}`)
       }
     })
-    .catch(error => console.log(error))
+    .catch(err => {
+      console.log(err)
+      res.render(
+        'error',
+        { error: err.message }
+      )
+    })
 })
 
 module.exports = router

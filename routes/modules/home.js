@@ -5,7 +5,7 @@ const UrlShortener = require('../../models/url-shortener')
 
 const HOST = 'http://localhost:3001/'
 
-router.get('/', (req, res) => {
+router.get('/', (req, res) => { 
   res.render('index')
 })
 
@@ -15,7 +15,13 @@ router.get('/:shortUrl', (req, res) => {
   return UrlShortener.find({ shortUrl: shortUrl })
     .lean()
     .then(shortUrl => res.redirect(`${shortUrl[0].url}`))
-    .catch(error => console.log(error))
+    .catch(err => {
+      console.log(err)
+      res.render(
+        'error',
+        { error: err.message }
+      )
+    })
 })
 
 module.exports = router
