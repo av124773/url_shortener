@@ -1,4 +1,23 @@
+{{#if urlShortener}}
+{{!-- 顯示短網址的畫面 --}}
+<div class="row">
+  <div class="col-auto mx-auto">
+    <p>
+      <span class="text-secondary">
+        請使用以下短址：
+      </span>
+      <a class="url-text" href="{{urlShortener.shortUrl}}">{{urlShortener.shortUrl}}</a>
+    </p>
+  </div>
+</div>
+<div class="row">
+  <div class="col-auto mx-auto">
+    <button class="btn btn-primary copy-button" type="button">Copy</button>
+  </div>
+</div>
 
+{{else}}
+{{!-- 準備輸入網址的畫面 --}}
 <form action="/shorten" method="post">
   <div class="row">
     <div class="col-auto mx-auto">
@@ -12,4 +31,22 @@
       <button class="btn btn-outline-primary" type="submit">縮址</button>
     </div>
   </div>
-</form>  
+</form>
+{{/if}}
+
+{{!-- 一鍵複製功能 --}}
+<script>
+  const btnCopy = document.querySelector('.copy-button')
+  btnCopy.addEventListener('click', function () {
+    const range = document.createRange()
+    const texts = document.querySelector('.url-text')
+    range.selectNode(texts)
+
+    const selection = window.getSelection()
+    selection.removeAllRanges()
+    selection.addRange(range)
+    document.execCommand('copy')
+    alert(`已複製網址: ${selection.toString()}`)
+    selection.removeAllRanges()
+  })
+</script>

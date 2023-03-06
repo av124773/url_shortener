@@ -10,7 +10,7 @@ router.get('/:id', (req, res) => {
   const id = req.params.id
   return UrlShortener.findById(id)
     .lean()
-    .then(urlShortener => res.render('show', { urlShortener }))
+    .then(urlShortener => res.render('index', { urlShortener }))
     .catch(err => {
       console.log(err)
       res.render('error', { error: err.message })
